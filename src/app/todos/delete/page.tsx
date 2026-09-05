@@ -6,6 +6,7 @@ import Link from "next/link";
 
 const DeleteTodo = () => {
   const handleDelete = (e:FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     // Connect your delete-todo API here
     console.log("Todo deleted");
   };
