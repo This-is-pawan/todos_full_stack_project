@@ -1,11 +1,11 @@
 
 "use client";
 
-import React from "react";
+import React, { FormEvent } from "react";
 import Link from "next/link";
 
 const DeleteTodo = () => {
-  const handleDelete = () => {
+  const handleDelete = (e:FormEvent<HTMLFormElement>) => {
     // Connect your delete-todo API here
     console.log("Todo deleted");
   };
