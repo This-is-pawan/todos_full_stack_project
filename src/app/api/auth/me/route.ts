@@ -1,8 +1,9 @@
-
 import { NextRequest, NextResponse } from "next/server";
+
 import { VerifyToken } from "../../lib/jwt";
 import User from "../../models/userModel";
 import { connectDB } from "../../lib/db";
+import UserCreateModel from "../../models/creatModel";
 
 export const GET = async (req: NextRequest) => {
   try {
@@ -39,7 +40,7 @@ export const GET = async (req: NextRequest) => {
       );
     }
 
-    // Find user using ID from JWT
+    // Find authenticated user
     const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {
@@ -52,16 +53,23 @@ export const GET = async (req: NextRequest) => {
       );
     }
 
-    // Return actual user data
+    // Find all todos created by authenticated user
+    const todos = await UserCreateModel.find({
+       userId: decoded.id,
+    }).sort({ createdAt: -1 });
+
     return NextResponse.json(
       {
         success: true,
         user,
+        user,
+        todos,
+        count: todos.length,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Get user error:", error);
+    console.error("Get todos error:", error);
 
     return NextResponse.json(
       {
@@ -72,4 +80,3 @@ export const GET = async (req: NextRequest) => {
     );
   }
 };
-

@@ -1,15 +1,44 @@
 
 "use client";
 
-import React, { FormEvent } from "react";
+import React from "react";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { GlobalContext } from "@/app/contextapi";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const DeleteTodo = () => {
-  const handleDelete = (e:FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    // Connect your delete-todo API here
-    console.log("Todo deleted");
-  };
+const {loading ,setLoading, GetAuthUser}=GlobalContext()
+
+  const {id}=useParams()
+ const route=useRouter()
+const handleDelete = async () => {
+  setLoading(true);
+
+  try {
+    const result = await axios.delete(`/api/auth/delete/${id}`, {
+      withCredentials: true,
+    });
+
+    if (result.data.success) {
+ GetAuthUser()
+      toast.success("Delete success");
+      route.push("/todos");
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      toast.error(
+        error.response?.data?.message || "Something went wrong"
+      );
+    } else {
+      toast.error("Something went wrong");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <main className="min-h-screen bg-slate-950 px-5 py-10 text-white sm:px-6 lg:px-8">
@@ -72,11 +101,15 @@ const DeleteTodo = () => {
               </Link>
 
               <button
-                type="button"
+               
                 onClick={handleDelete}
-                className="rounded-xl bg-red-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-red-500/10 transition hover:bg-red-400 hover:-translate-y-0.5"
+                className="rounded-xl bg-red-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-red-500/10 transition hover:bg-red-400 hover:-translate-y-0.5 flex justify-center items-center cursor-pointer"
               >
-                Delete Todo
+               {loading ? (
+                               <AiOutlineLoading className="animate-spin tansition" />
+                             ) : (
+                               "Delete"
+                             )}
               </button>
 
             </div>

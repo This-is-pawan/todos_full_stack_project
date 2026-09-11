@@ -3,15 +3,52 @@
 
 import React, { FormEvent, useState } from "react";
 import Link from "next/link";
+import { GlobalContext } from "../contextapi";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { AiOutlineLoading } from "react-icons/ai";
+import axios from "axios";
 
 const AddTodo = () => {
+  const route=useRouter()
+
   const [priority, setPriority] = useState("Medium");
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // Connect your create-todo API here
-    console.log("Todo submitted");
+const {loading,setLoading, GetAuthUser}=GlobalContext()
+const [title,setTitle]=useState('')
+const [description,setDescription]=useState('')
+const [category,setCategory]=useState('')
+const [date,setDate]=useState('')
+const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+    setLoading(true);
+    try {
+    
+      const data = {
+  todolist: title,
+  description,
+  category,
+  prioity: priority,
+  due_date: date,
+};
+      const result = await axios.post("api/auth/create", data, {
+        withCredentials: true,
+      });
+      if (result.data) {
+         GetAuthUser()
+        route.push("/todos");
+      toast.success("create success");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Something went wrong"
+        );
+      } else {
+        toast.error("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,6 +95,7 @@ const AddTodo = () => {
                 id="title"
                 name="title"
                 type="text"
+                onChange={(e)=>setTitle(e.target.value)}
                 placeholder="e.g. Complete React project"
                 required
                 className="w-full rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
@@ -77,6 +115,7 @@ const AddTodo = () => {
                 id="description"
                 name="description"
                 rows={5}
+                 onChange={(e)=>setDescription(e.target.value)}
                 placeholder="Describe what needs to be done..."
                 className="w-full resize-none rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
@@ -97,6 +136,7 @@ const AddTodo = () => {
                 <select
                   id="category"
                   name="category"
+                   onChange={(e)=>setCategory(e.target.value)}
                   className="w-full appearance-none rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-slate-300 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="Personal">Personal</option>
@@ -143,6 +183,7 @@ const AddTodo = () => {
                 id="dueDate"
                 name="dueDate"
                 type="date"
+               onChange={(e) => setDate(e.target.value)}
                 className="w-full rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-slate-300 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
@@ -182,9 +223,14 @@ const AddTodo = () => {
 
               <button
                 type="submit"
-                className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:from-blue-500 hover:to-cyan-400 active:translate-y-0"
+                className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:from-blue-500 hover:to-cyan-400 active:translate-y-0 flex justify-center items-center cursor-pointer"
               >
-                Create Todo →
+              
+              {  loading ? (
+                                <AiOutlineLoading className="animate-spin tansition" />
+                              ) : (
+                                "Create Todo →"
+                              )}
               </button>
 
             </div>
