@@ -61,7 +61,6 @@ export const GET = async (req: NextRequest) => {
       {
         success: true,
         user,
-        user,
         todos,
         count: todos.length,
       },
