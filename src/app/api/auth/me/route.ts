@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-
 import { VerifyToken } from "../../lib/jwt";
 import User from "../../models/userModel";
 import { connectDB } from "../../lib/db";
