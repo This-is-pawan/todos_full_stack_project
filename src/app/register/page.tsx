@@ -16,12 +16,12 @@ type user_data={
 }
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
- 
+   const [loading,setLoading] = useState(false);
   const [name, setName] = useState<user_data["name"]>("");
   const [email, setEmail] = useState<user_data["email"]>("");
   const [password, setPassword] = useState<user_data["password"]>("");
 const route=useRouter()
-const { GetAuthUser,loading,setLoading}=GlobalContext()
+const { GetAuthUser,}=GlobalContext()
   const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
     setLoading(true)
     try {

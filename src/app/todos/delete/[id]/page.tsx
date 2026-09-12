@@ -1,17 +1,16 @@
 
 "use client";
-
-import React from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { GlobalContext } from "@/app/contextapi";
 import { AiOutlineLoading } from "react-icons/ai";
 
 const DeleteTodo = () => {
-const {loading ,setLoading, GetAuthUser}=GlobalContext()
-
+const { GetAuthUser}=GlobalContext()
+  const [loading,setLoading] = useState<boolean>(false);
   const {id}=useParams()
  const route=useRouter()
 const handleDelete = async () => {

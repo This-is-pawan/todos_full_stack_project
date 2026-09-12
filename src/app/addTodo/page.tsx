@@ -13,7 +13,8 @@ const AddTodo = () => {
   const route=useRouter()
 
   const [priority, setPriority] = useState("Medium");
-const {loading,setLoading, GetAuthUser}=GlobalContext()
+const { GetAuthUser}=GlobalContext()
+  const [loading,setLoading] = useState(false);
 const [title,setTitle]=useState('')
 const [description,setDescription]=useState('')
 const [category,setCategory]=useState('')

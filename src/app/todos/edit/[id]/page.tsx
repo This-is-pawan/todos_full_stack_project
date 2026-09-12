@@ -7,6 +7,7 @@ import { GlobalContext } from "@/app/contextapi";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { AiOutlineLoading } from "react-icons/ai";
 
 interface TodoData {
   _id: string;
@@ -25,8 +26,8 @@ const EditTodo = () => {
 
   const id = params.id as string;
 
-  const { auth_user_create_data, loading, setLoading , GetAuthUser} = GlobalContext();
-
+  const { auth_user_create_data, GetAuthUser} = GlobalContext();
+  const [loading,setLoading] = useState(false);
   // Form states
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -340,9 +341,11 @@ if(result.data){
                 disabled={loading}
                 className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:from-blue-500 hover:to-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {loading
-                  ? "Updating..."
-                  : "Save Changes →"}
+                {loading ? (
+                                              <AiOutlineLoading className="animate-spin tansition" />
+                                            ) : (
+                                              "Edit"
+                                            )}
               </button>
 
             </div>

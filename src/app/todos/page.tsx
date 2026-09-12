@@ -19,7 +19,7 @@ interface Todo {
 
 const Todos = () => {
   const [filter, setFilter] = useState("All");
-
+  const [loading,setLoading] = useState(false);
   const { auth_user_create_data , GetAuthUser} = GlobalContext();
 
   
